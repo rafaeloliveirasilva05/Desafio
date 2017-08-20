@@ -1,0 +1,84 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/img_game"
+        android:layout_width="100dp"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:textColor="@color/colorPrimarytext"
+            android:textSize="20dp"
+            android:layout_above="@+id/textView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="11dp" />
+
+        <TextView
+            android:id="@+id/txt_release_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_alignTop="@+id/textView"
+            android:layout_toEndOf="@+id/textView"
+            android:layout_toRightOf="@+id/textView"
+            android:paddingRight="16dp"
+            android:textColor="@color/colorPrimarytext"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Release Date: "
+            android:textColor="@color/colorPrimarytext"
+            android:layout_above="@+id/txtTeste"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/txtTeste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txtPlatforms"
+            android:layout_alignBottom="@+id/txtPlatforms"
+            android:layout_toEndOf="@+id/txtPlatforms"
+            android:layout_toRightOf="@+id/txtPlatforms"
+            android:layout_weight="0.49"
+            android:text="                                       "
+            android:textColor="@color/colorPrimarytext" />
+
+        <TextView
+            android:id="@+id/txtPlatforms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Platforms:  "
+            android:textColor="@color/colorPrimarytext"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="12dp" />
+
+        <View
+            android:id="@+id/vw_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="0.8dp"
+            android:layout_marginTop="99dp"
+            android:background="@color/colorPrimary" />
+
+    </RelativeLayout>
+
+</LinearLayout>
