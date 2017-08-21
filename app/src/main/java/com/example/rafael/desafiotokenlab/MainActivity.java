@@ -16,11 +16,10 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Lista de Games");
-        setSupportActionBar(mToolbar);
     }
 
     public void carregarLista (View view){
-        Intent  intent = new Intent(this, ListaGamesActivity.class);
+        Intent intent = new Intent(this, ListaGamesActivity.class);
         startActivity(intent);
     }
 }

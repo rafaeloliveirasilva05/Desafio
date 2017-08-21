@@ -1,6 +1,8 @@
 package com.example.rafael.desafiotokenlab;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,44 +31,74 @@ public class ListaGamesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_games);
 
-        final Context c = this;
+        final Context context = this;
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Lista de Games");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        GameService gameService = GameService.retrofit.create(GameService.class);
-
         final ProgressBar mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Call<GameList> serviceGame = gameService.getObjGame();
+        GameService gameService = GameService.retrofit.create(GameService.class);
+
+        final Call<GameList> serviceGame = gameService.getObjGame();
         serviceGame.enqueue(new Callback<GameList>() {
             @Override
             public void onResponse(Call<GameList> call, Response<GameList> response) {
 
                 if(response.isSuccessful()){
-                    GameList t = response.body();
-                    gameList = t.getGames();
+                    GameList gameListBody = response.body();
 
-                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-                    recyclerView.setAdapter(new GameAdapter(gameList,c));
-                    LinearLayoutManager layout = new LinearLayoutManager(c,
-                            LinearLayoutManager.VERTICAL, false);
+                    //verifica aqui se o corpo da resposta não é nulo
+                   if(gameListBody != null){
+                       gameList = gameListBody.getGames();
 
-                    recyclerView.setLayoutManager(layout);
+                       RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
+                       recyclerView.setAdapter(new GameAdapter(gameList,context));
+                       LinearLayoutManager layout = new LinearLayoutManager(context,
+                               LinearLayoutManager.VERTICAL, false);
 
-                    mProgressBar.setVisibility(View.GONE);
+                       recyclerView.setLayoutManager(layout);
+                       mProgressBar.setVisibility(View.GONE);
+                   }
+                   else{
+                       Toast.makeText(getApplicationContext(),"Resposta nula do servidor",
+                               Toast.LENGTH_SHORT).show();
+                   }
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Erro: "+response.code(),
-                            Toast.LENGTH_LONG).show();
+                    if(response.code() == 404){
+                        mProgressBar.setVisibility(View.GONE);
+                        AlertDialog.Builder msgBox = new AlertDialog.Builder(context);
+                        msgBox.setTitle("Não foi possivel carregar a lista de Games no momento.");
+
+                        msgBox.setPositiveButton("Voltar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        });
+                        msgBox.show();
+//
+                    }
+//                    Toast.makeText(getApplicationContext(),"Erro: "+response.code(),
+//                            Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<GameList> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Erro: "+t.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                mProgressBar.setVisibility(View.GONE);
+                AlertDialog.Builder msgBox = new AlertDialog.Builder(context);
+                msgBox.setTitle("Falha na conexão com a internet");
+
+                msgBox.setPositiveButton("Voltar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+                msgBox.show();
             }
         });
 
