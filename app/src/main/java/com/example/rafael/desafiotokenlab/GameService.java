@@ -15,7 +15,7 @@ public interface GameService {
     Call<GameList> getObjGame();
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://dl.dropboxusercontent.com/s/1b7jlwii7jfvuh/")
+            .baseUrl("https://dl.dropboxusercontent.com/s/1b7jlwii7jfvuh0/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 }

@@ -25,19 +25,21 @@ import retrofit2.Response;
 public class ListaGamesActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private List<Game> gameList;
+    private Context context;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_games);
 
-        final Context context = this;
+        context = this;
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Lista de Games");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final ProgressBar mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
         GameService gameService = GameService.retrofit.create(GameService.class);
@@ -50,24 +52,18 @@ public class ListaGamesActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     GameList gameListBody = response.body();
 
-                    //verifica aqui se o corpo da resposta não é nulo
-                   if(gameListBody != null){
-                       gameList = gameListBody.getGames();
+                    gameList = gameListBody.getGames();
 
-                       RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-                       recyclerView.setAdapter(new GameAdapter(gameList,context));
-                       LinearLayoutManager layout = new LinearLayoutManager(context,
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
+                    recyclerView.setAdapter(new GameAdapter(gameList,context));
+                    LinearLayoutManager layout = new LinearLayoutManager(context,
                                LinearLayoutManager.VERTICAL, false);
 
-                       recyclerView.setLayoutManager(layout);
-                       mProgressBar.setVisibility(View.GONE);
-                   }
-                   else{
-                       Toast.makeText(getApplicationContext(),"Resposta nula do servidor",
-                               Toast.LENGTH_SHORT).show();
-                   }
+                    recyclerView.setLayoutManager(layout);
+                    mProgressBar.setVisibility(View.GONE);
                 }
                 else{
+                    //Caso o endpoint nao seja encontrado, o usuario receberá uma mensagem
                     if(response.code() == 404){
                         mProgressBar.setVisibility(View.GONE);
                         AlertDialog.Builder msgBox = new AlertDialog.Builder(context);
@@ -80,17 +76,16 @@ public class ListaGamesActivity extends AppCompatActivity {
                             }
                         });
                         msgBox.show();
-//
                     }
-//                    Toast.makeText(getApplicationContext(),"Erro: "+response.code(),
-//                            Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<GameList> call, Throwable t) {
+
+                //Caso não tenha conexão com a internet o usuario recebera uma mensage de erro de conexão
                 mProgressBar.setVisibility(View.GONE);
                 AlertDialog.Builder msgBox = new AlertDialog.Builder(context);
-                msgBox.setTitle("Falha na conexão com a internet");
+                msgBox.setTitle("Falha na conexão com a Iternet");
 
                 msgBox.setPositiveButton("Voltar", new DialogInterface.OnClickListener() {
                     @Override
