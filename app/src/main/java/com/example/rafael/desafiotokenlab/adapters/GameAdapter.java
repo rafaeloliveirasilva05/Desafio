@@ -26,16 +26,18 @@ public class GameAdapter extends RecyclerView.Adapter {
         this.context  = context;
     }
 
+    //Esse método deverá retornar layout criado pelo ViewHolder já inflado em uma view.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        //Seta o layout que cada item da lista ira possuir
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_game, parent, false);
 
-        MyViewHolder holder = new MyViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
+    // Aqui é recuperado o objeto da lista de objetos pela posição e associado à ViewHolder.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         MyViewHolder holder = (MyViewHolder) viewHolder;
@@ -49,6 +51,7 @@ public class GameAdapter extends RecyclerView.Adapter {
         Picasso.with(context).load(game.getImage()).into(((MyViewHolder) viewHolder).img);
     }
 
+    //Método que deverá retornar quantos itens há na lista.
     @Override
     public int getItemCount() {
         return gameList.size();

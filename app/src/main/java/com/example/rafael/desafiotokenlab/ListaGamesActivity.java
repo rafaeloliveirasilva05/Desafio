@@ -27,6 +27,7 @@ public class ListaGamesActivity extends AppCompatActivity {
     private List<Game> gameList;
     private Context context;
     private ProgressBar mProgressBar;
+    private GameService gameService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,8 @@ public class ListaGamesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_games);
 
         context = this;
+
+        //Pega uma referencia Toolbar e a inicia
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Lista de Games");
         setSupportActionBar(mToolbar);
@@ -42,7 +45,7 @@ public class ListaGamesActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        GameService gameService = GameService.retrofit.create(GameService.class);
+        gameService = GameService.retrofit.create(GameService.class);
 
         final Call<GameList> serviceGame = gameService.getObjGame();
         serviceGame.enqueue(new Callback<GameList>() {
@@ -52,14 +55,20 @@ public class ListaGamesActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     GameList gameListBody = response.body();
 
+                    //REcupera uma lista de games do webservice
                     gameList = gameListBody.getGames();
 
+                    //Aqui é instanciado o Recyclerview
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
                     recyclerView.setAdapter(new GameAdapter(gameList,context));
+
+                    //Definimos as disposições dos itens da lista
                     LinearLayoutManager layout = new LinearLayoutManager(context,
                                LinearLayoutManager.VERTICAL, false);
 
                     recyclerView.setLayoutManager(layout);
+
+                    //Depois de concluir a exibição do conteudo, o pogressBar é fechado
                     mProgressBar.setVisibility(View.GONE);
                 }
                 else{
